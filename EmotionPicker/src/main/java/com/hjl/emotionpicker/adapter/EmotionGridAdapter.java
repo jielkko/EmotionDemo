@@ -16,8 +16,8 @@ import com.hjl.emotionpicker.model.EmotionModel;
 
 import java.util.List;
 
-public class MenuGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public static final String TAG = "MenuGridAdapter";
+public class EmotionGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public static final String TAG = "EmotionGridAdapter";
 
     private static final int TYPE_TITLE = 0;
     private static final int TYPE_ITEM_LIST = 1;
@@ -25,7 +25,7 @@ public class MenuGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<EmotionModel> mAppData;
 
 
-    public MenuGridAdapter(Context context, List<EmotionModel> data) {
+    public EmotionGridAdapter(Context context, List<EmotionModel> data) {
         this.mContext = context;
         this.mAppData = data;
     }

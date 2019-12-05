@@ -1,6 +1,5 @@
 package com.hjl.emotionpicker.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -15,13 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hjl.emotionpicker.R;
-import com.hjl.emotionpicker.adapter.MenuGridAdapter;
+import com.hjl.emotionpicker.adapter.EmotionGridAdapter;
 import com.hjl.emotionpicker.model.EmotionModel;
 import com.hjl.emotionpicker.utils.EmotionPicker;
-import com.hjl.emotionpicker.utils.EmotionUtils;
 import com.hjl.emotionpicker.utils.SpanStringUtils;
 
 import java.util.ArrayList;
@@ -35,7 +32,7 @@ public class EmotionFragment extends Fragment {
     private EditText mEditText;
 
     private List<EmotionModel> mAppMenuData = new ArrayList<>(); //全部的用户
-    private MenuGridAdapter mAdapter;
+    private EmotionGridAdapter mAdapter;
 
     public EmotionFragment() {
 
@@ -105,9 +102,9 @@ public class EmotionFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(
                 mContext, 7);
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new MenuGridAdapter(mContext, mAppMenuData);
+        mAdapter = new EmotionGridAdapter(mContext, mAppMenuData);
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new MenuGridAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new EmotionGridAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Log.d("onClick", "onClick: " + mEditText.getText().toString());

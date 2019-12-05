@@ -9,14 +9,14 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp">
 
-    <com.hjl.emotionpicker.CustomViewPager
+    <com.hjl.emotionpicker.EmotionViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:orientation="vertical"
         android:overScrollMode="never">
 
-    </com.hjl.emotionpicker.CustomViewPager>
+    </com.hjl.emotionpicker.EmotionViewPager>
 
 
     <LinearLayout

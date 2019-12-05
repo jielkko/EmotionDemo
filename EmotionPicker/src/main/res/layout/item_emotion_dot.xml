@@ -12,6 +12,6 @@
         android:id="@+id/dot"
         android:layout_width="6dp"
         android:layout_height="6dp"
-        tools:src="@drawable/shape_dot_gray" />
+        tools:src="@drawable/shape_emotion_dot_gray" />
 
 </LinearLayout>

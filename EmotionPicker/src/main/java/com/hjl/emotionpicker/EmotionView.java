@@ -15,12 +15,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 
-import com.hjl.emotionpicker.adapter.DotAdapter;
-import com.hjl.emotionpicker.adapter.fragmentAdapter;
+import com.hjl.emotionpicker.adapter.EmotionDotAdapter;
+import com.hjl.emotionpicker.adapter.EmotionFragmentAdapter;
 import com.hjl.emotionpicker.fragment.EmotionFragment;
 import com.hjl.emotionpicker.model.EmotionModel;
 import com.hjl.emotionpicker.utils.EmotionPicker;
-import com.hjl.emotionpicker.utils.EmotionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,16 +48,16 @@ public class EmotionView extends LinearLayout {
 
     protected List<String> mTitles = new ArrayList<>();
     protected List<Fragment> mFragments = new ArrayList<>();
-    protected fragmentAdapter mAdapter;
+    protected EmotionFragmentAdapter mAdapter;
 
     //菜单列表
-    private DotAdapter mDotAdapter;
+    private EmotionDotAdapter mDotAdapter;
     public List<String> mDotData = new ArrayList<>();
 
     private int choosePage = 0;
 
 
-    private CustomViewPager mViewPager;
+    private EmotionViewPager mViewPager;
     private RecyclerView mSelectedRecyclerView;
 
 
@@ -75,7 +74,7 @@ public class EmotionView extends LinearLayout {
 
 
 
-        mViewPager = (CustomViewPager) view.findViewById(R.id.view_pager);
+        mViewPager = (EmotionViewPager) view.findViewById(R.id.view_pager);
         mSelectedRecyclerView = (RecyclerView) view.findViewById(R.id.selected_recycler_view);
 
 
@@ -118,8 +117,8 @@ public class EmotionView extends LinearLayout {
         }
 
 
-        //mAdapter = new fragmentAdapter(getSupportFragmentManager(), mFragments, mTitles);
-        mAdapter = new fragmentAdapter(mFragmentManager, mFragments, mTitles);
+        //mAdapter = new EmotionFragmentAdapter(getSupportFragmentManager(), mFragments, mTitles);
+        mAdapter = new EmotionFragmentAdapter(mFragmentManager, mFragments, mTitles);
         mViewPager.setAdapter(mAdapter);
         //mViewPager.setOffscreenPageLimit(mFragments.size()-1);//设置缓存所有
         mViewPager.setOffscreenPageLimit(0);
@@ -155,12 +154,12 @@ public class EmotionView extends LinearLayout {
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSelectedRecyclerView.setLayoutManager(layoutManager);
 
-        mDotAdapter = new DotAdapter(mContext, mDotData);
+        mDotAdapter = new EmotionDotAdapter(mContext, mDotData);
 
         mSelectedRecyclerView.setAdapter(mDotAdapter);
 
         //      调用按钮返回事件回调的方法
-        mDotAdapter.buttonSetOnclick(new DotAdapter.ButtonInterface() {
+        mDotAdapter.buttonSetOnclick(new EmotionDotAdapter.ButtonInterface() {
             @Override
             public void onclick(View view, int position) {
 

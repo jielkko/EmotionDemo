@@ -15,14 +15,14 @@ import com.hjl.emotionpicker.R;
 
 import java.util.List;
 
-public class DotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class EmotionDotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final String TAG = "PersonSelectedAdapter";
 
     private Context mContext;
     private List<String> mAppData;
     private int choose = 0;
 
-    public DotAdapter(Context context, List<String> data) {
+    public EmotionDotAdapter(Context context, List<String> data) {
         this.mContext = context;
         this.mAppData = data;
     }
@@ -43,7 +43,7 @@ public class DotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         View view = null;
         RecyclerView.ViewHolder holder = null;
-        view = LayoutInflater.from(mContext).inflate(R.layout.item_dot, parent, false);
+        view = LayoutInflater.from(mContext).inflate(R.layout.item_emotion_dot, parent, false);
         holder = new ListViewHolder(view);
         return holder;
     }
@@ -100,8 +100,8 @@ public class DotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
            /*  VectorDrawableCompat vectorDrawableCompat = VectorDrawableCompat.create(resources,R.drawable.ic_dot_gray,mContext.getTheme());
             //你需要改变的颜色
             vectorDrawableCompat.setTint(resources.getColor(R.color.colorPrimary));*/
-            mDotGray = resources.getDrawable(R.drawable.shape_dot_gray);
-            mDotBlue = resources.getDrawable(R.drawable.shape_dot_blue);
+            mDotGray = resources.getDrawable(R.drawable.shape_emotion_dot_gray);
+            mDotBlue = resources.getDrawable(R.drawable.shape_emotion_dot_blue);
         }
     }
 

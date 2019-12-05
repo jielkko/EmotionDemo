@@ -9,15 +9,15 @@ import android.view.MotionEvent;
 /**
  * Created by Administrator on 2017/11/8.
  */
-public class CustomViewPager extends ViewPager {
+public class EmotionViewPager extends ViewPager {
 
     private boolean isCanScroll = true;
 
-    public CustomViewPager(Context context) {
+    public EmotionViewPager(Context context) {
         super(context);
     }
 
-    public CustomViewPager(Context context, AttributeSet attrs) {
+    public EmotionViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
