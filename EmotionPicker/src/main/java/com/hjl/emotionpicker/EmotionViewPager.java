@@ -6,9 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-/**
- * Created by Administrator on 2017/11/8.
- */
+
 public class EmotionViewPager extends ViewPager {
 
     private boolean isCanScroll = true;

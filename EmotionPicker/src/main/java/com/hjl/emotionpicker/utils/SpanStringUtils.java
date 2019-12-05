@@ -16,14 +16,7 @@ import com.hjl.emotionpicker.widget.CenterAlignImageSpan;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by SiberiaDante
- * Describe: 文本中的emojb字符处理为表情图片
- * Time: 2017/6/26
- * Email: 994537867@qq.com
- * GitHub: https://github.com/SiberiaDante
- * 博客园： http://www.cnblogs.com/shen-hua/
- */
+
 
 public class SpanStringUtils {
 

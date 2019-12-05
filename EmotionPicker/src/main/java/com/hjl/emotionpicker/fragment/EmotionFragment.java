@@ -97,7 +97,7 @@ public class EmotionFragment extends Fragment {
             mAppMenuData.add(list.get(i));
         }
 
-        mAppMenuData.add(new EmotionModel("删除",R.drawable.compose_emotion_delete));
+        mAppMenuData.add(new EmotionModel("删除",R.drawable.emotion_delete));
 
         GridLayoutManager layoutManager = new GridLayoutManager(
                 mContext, 7);
