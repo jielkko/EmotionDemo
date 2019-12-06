@@ -7,23 +7,14 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/tv_editeText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#888888">
-        <com.hjl.emotionpicker.EmotionView
-            android:id="@+id/emotion_view"
+        <Button
+            android:id="@+id/btn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="跳转"
+            android:textColor="#020202" />
 
-        </com.hjl.emotionpicker.EmotionView>
-    </LinearLayout>
 
 
 </LinearLayout>

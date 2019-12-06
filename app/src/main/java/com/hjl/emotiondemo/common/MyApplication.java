@@ -25,6 +25,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        ContextUtil.init(this);
 
         //初始化  建议在Application 调用
         //自定义表情包

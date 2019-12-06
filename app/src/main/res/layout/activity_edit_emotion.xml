@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <TextView
+        android:id="@+id/tv_input_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:focusable="true"
+        android:gravity="top"
+        android:text="哈哈哈" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ededed"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingTop="6dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="6dp">
+
+
+        <CheckBox
+            android:id="@+id/emotion_button"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/checkbox_emotion_keyboard"
+            android:button="@null"
+            android:clickable="true"
+            android:visibility="visible" />
+
+
+        <LinearLayout
+            android:id="@+id/rl_editbar_bg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/tv_editeText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#0000"
+                android:maxLines="3"
+                android:minHeight="36dp"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/more_button"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/checkbox_more_keyboard"
+            android:button="@null"
+            android:clickable="true"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/bar_btn_send"
+            android:layout_width="56dp"
+            android:layout_height="30dp"
+            android:text="发送"
+            android:textSize="10dp"
+            android:textColor="#020202" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/panel_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+
+        <include layout="@layout/view_panel" />
+
+
+    </LinearLayout>
+
+    <!--   <LinearLayout
+           android:id="@+id/panel_layout"
+           android:layout_width="match_parent"
+           android:layout_height="0dp"
+           android:layout_weight="1"
+           android:orientation="vertical"
+           android:visibility="gone">
+
+
+           <com.hjl.emotionpicker.EmotionView
+               android:id="@+id/emotion_view"
+               android:layout_width="match_parent"
+               android:layout_height="0dp"
+               android:layout_weight="1">
+
+           </com.hjl.emotionpicker.EmotionView>
+       </LinearLayout>-->
+
+</LinearLayout>
