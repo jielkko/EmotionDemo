@@ -36,7 +36,7 @@ public class EmojiKeyboard {
 
     private SharedPreferences sharedPreferences;
 
-    private static final String Panel_KEYBOARD = "PanelKeyBoard";
+    private static final String Panel_KEYBOARD = "PanelKeyboard";
 
     private static final String KEY_SOFT_KEYBOARD_HEIGHT = "SoftKeyboardHeight";
 

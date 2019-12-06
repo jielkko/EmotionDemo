@@ -48,7 +48,7 @@ public class EmotionFragment extends Fragment {
         return fragment;
     }
 
-    public void setEditText(EditText mEditText){
+    public void setEditText(EditText mEditText) {
         this.mEditText = mEditText;
     }
 
@@ -97,7 +97,7 @@ public class EmotionFragment extends Fragment {
             mAppMenuData.add(list.get(i));
         }
 
-        mAppMenuData.add(new EmotionModel("删除",R.drawable.emotion_delete));
+        mAppMenuData.add(new EmotionModel("删除", R.drawable.emotion_delete));
 
         GridLayoutManager layoutManager = new GridLayoutManager(
                 mContext, 7);
@@ -133,8 +133,6 @@ public class EmotionFragment extends Fragment {
             }
         });
     }
-
-
 
 
 }

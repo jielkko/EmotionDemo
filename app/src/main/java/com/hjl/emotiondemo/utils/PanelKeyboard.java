@@ -1,5 +1,6 @@
 package com.hjl.emotiondemo.utils;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
@@ -14,8 +15,7 @@ import android.widget.LinearLayout;
 
 import com.hjl.emotiondemo.common.ContextUtil;
 
-
-public class PanelKeyBoard {
+public class PanelKeyboard {
 
     private Activity activity;
 
@@ -34,7 +34,7 @@ public class PanelKeyBoard {
 
 
 
-    private static final String Panel_KEYBOARD = "PanelKeyBoard";
+    private static final String Panel_KEYBOARD = "PanelKeyboard";
 
     private static final String KEY_SOFT_KEYBOARD_HEIGHT = "SoftKeyboardHeight";
 
@@ -42,7 +42,7 @@ public class PanelKeyBoard {
 
     private Handler handler;
 
-    public PanelKeyBoard(Activity activity, EditText editText, View panelView, View contentView) {
+    public PanelKeyboard(Activity activity, EditText editText, View panelView, View contentView) {
         init(activity, editText, panelView, contentView);
     }
 
@@ -54,7 +54,7 @@ public class PanelKeyBoard {
         this.editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(final View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP && PanelKeyBoard.this.panelView.isShown()) {
+                if (event.getAction() == MotionEvent.ACTION_UP && PanelKeyboard.this.panelView.isShown()) {
                     lockContentViewHeight();
                     hidePanel(true);
                     unlockContentViewHeight();
@@ -66,7 +66,7 @@ public class PanelKeyBoard {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    if (PanelKeyBoard.this.panelView.isShown()) {
+                    if (PanelKeyboard.this.panelView.isShown()) {
                         hidePanel(false);
                     } else if (isSoftKeyboardShown()) {
                         hideSoftKeyboard();

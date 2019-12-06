@@ -11,8 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hjl.emotiondemo.utils.EmojiKeyboard;
-import com.hjl.emotiondemo.utils.PanelKeyBoard;
+import com.hjl.emotiondemo.utils.PanelKeyboard;
 import com.hjl.emotionpicker.EmotionView;
+
 
 public class EditEmotionActivity extends AppCompatActivity {
 
@@ -34,7 +35,7 @@ public class EditEmotionActivity extends AppCompatActivity {
 
 
     private EmojiKeyboard mEmojiKeyboard;
-    private PanelKeyBoard mPanelKeyboard;
+    private PanelKeyboard mPanelKeyboard;
 
 
 
@@ -95,8 +96,8 @@ public class EditEmotionActivity extends AppCompatActivity {
 
         mEmotionView.init(getSupportFragmentManager(),mTvEditeText);
 
-        mPanelKeyboard = new PanelKeyBoard(this, mTvEditeText, mPanelLayout, mTvInputContent);
-        mPanelKeyboard.setPanelVisibilityChangeListener(new PanelKeyBoard.OnPanelVisibilityChangeListener() {
+        mPanelKeyboard = new PanelKeyboard(this, mTvEditeText, mPanelLayout, mTvInputContent);
+        mPanelKeyboard.setPanelVisibilityChangeListener(new PanelKeyboard.OnPanelVisibilityChangeListener() {
             @Override
             public void onShowPanel() {
                 Log.e(TAG, "onShowPanel");
