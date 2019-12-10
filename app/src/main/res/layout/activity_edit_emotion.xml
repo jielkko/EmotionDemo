@@ -21,7 +21,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ededed"
+        android:background="#f7f7f7"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="8dp"
@@ -87,7 +87,7 @@
         android:id="@+id/panel_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="#f7f7f7"
         android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible">

@@ -8,7 +8,7 @@
         android:id="@+id/more_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ededed"
+        android:background="#f7f7f7"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -23,7 +23,7 @@
         android:id="@+id/emotion_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ededed"
+        android:background="#f7f7f7"
         android:orientation="vertical"
         android:visibility="gone">
 

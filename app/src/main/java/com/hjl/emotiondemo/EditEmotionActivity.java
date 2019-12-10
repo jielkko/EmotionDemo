@@ -32,8 +32,6 @@ public class EditEmotionActivity extends AppCompatActivity {
 
 
 
-
-
     private EmojiKeyboard mEmojiKeyboard;
     private PanelKeyboard mPanelKeyboard;
 
