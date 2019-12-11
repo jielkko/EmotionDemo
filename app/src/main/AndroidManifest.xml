@@ -22,6 +22,7 @@
 
 
         <activity android:name=".EditEmotionActivity"></activity>
+        <activity android:name=".EditEmotion2Activity"></activity>
     </application>
 
 </manifest>
