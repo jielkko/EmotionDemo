@@ -140,6 +140,7 @@ public class EditEmotion2Activity extends AppCompatActivity {
                     mRecorderButton.setVisibility(View.VISIBLE);
                     mMyEditText.setVisibility(View.GONE);
 
+
                     KeyBoardUtils.closeKeybord(mMyEditText);
                 }else{
                     mPanelKeyboard.clickHideView2();

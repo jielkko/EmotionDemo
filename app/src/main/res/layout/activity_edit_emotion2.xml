@@ -17,18 +17,40 @@
         android:gravity="top"
         android:orientation="vertical">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/refreshLayout"
+
+
+        <TextView
+            android:id="@+id/isNetwork"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="40dp"
+            android:background="#fedada"
+            android:gravity="center"
+            android:text="连接成功"
+            android:textColor="#635d5d"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
+                android:layout_height="match_parent">
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
@@ -86,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/shape_btn_recorder"
                 android:inputType="textMultiLine"
-                android:maxLines="8"
+                android:maxLines="3"
                 android:minHeight="35dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
