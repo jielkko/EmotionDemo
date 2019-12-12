@@ -99,7 +99,34 @@ public class PanelKeyboard {
             showPanel();
         }
     }
+    //用于弹出更多面板的View
+    public void clickHideView2() {
 
+
+        int softKeyboardHeight = getSoftKeyboardHeight();
+        if (softKeyboardHeight == 0) {
+            softKeyboardHeight = getSoftKeyboardHeightLocalValue();
+        }
+
+        panelView.getLayoutParams().height = softKeyboardHeight;
+        if (panelView.isShown()) {
+            panelView.setVisibility(View.GONE);
+            if (true) {
+                showSoftKeyboard(false);
+            }
+            if (panelVisibilityChangeListener != null) {
+                panelVisibilityChangeListener.onHidePanel();
+            }
+        }
+
+    }
+    //用于弹出更多面板的View
+    public void clickShowView2() {
+        panelView.setVisibility(View.VISIBLE);
+        if (panelVisibilityChangeListener != null) {
+            panelVisibilityChangeListener.onShowPanel();
+        }
+    }
     /**
      * 如果之前没有保存过键盘高度值
      * 则在进入Activity时自动打开键盘，并把高度值保存下来
@@ -190,7 +217,13 @@ public class PanelKeyboard {
      * 令编辑框获取焦点并显示键盘
      */
     private void showSoftKeyboard(boolean saveSoftKeyboardHeight) {
-        editText.requestFocus();
+        editText.setVisibility(View.VISIBLE);
+        //editText.requestFocus();
+        //获取焦点
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();//获取焦点 光标出现
+
         inputMethodManager.showSoftInput(editText, 0);
         if (saveSoftKeyboardHeight) {
             handler.postDelayed(new Runnable() {

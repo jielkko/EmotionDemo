@@ -29,6 +29,22 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 public class KeyBoardUtils {
     private static final String TAG = "KeyBoardUtils";
 
+
+    /**
+     * 打开键盘
+     **/
+    public static void openKeybord2(EditText v) {
+
+        //获取焦点
+        v.setFocusable(true);
+        v.setFocusableInTouchMode(true);
+        v.requestFocus();//获取焦点 光标出现
+
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
+
+    }
+
     /**
      * 打开键盘
      **/
