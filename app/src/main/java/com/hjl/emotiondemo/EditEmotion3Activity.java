@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -48,6 +49,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
     private ButtonStyle mSendBtn;
     private LinearLayout mPanelLayout;
     private LinearLayout mEmotionLayout;
+    private EmotionAllView mEmotionView;
     private LinearLayout mMoreLayout;
 
 
@@ -64,6 +66,9 @@ public class EditEmotion3Activity extends AppCompatActivity {
     private int keyBoardHeightChange = 0;  //实时高度
     private int keyBoardHeight = 0;   //默认弹出高度
 
+    private float scrollX = 0L;   //默认弹出高度
+    private float scrollY = 0L;   //默认弹出高度
+
     private void findById() {
         mParent = (LinearLayout) findViewById(R.id.parent);
         mChatContainer = (LinearLayout) findViewById(R.id.chat_container);
@@ -79,12 +84,24 @@ public class EditEmotion3Activity extends AppCompatActivity {
         mSendBtn = (ButtonStyle) findViewById(R.id.send_btn);
         mPanelLayout = (LinearLayout) findViewById(R.id.panel_layout);
         mEmotionLayout = (LinearLayout) findViewById(R.id.emotion_layout);
+        mEmotionView = (EmotionAllView) findViewById(R.id.emotion_view);
         mMoreLayout = (LinearLayout) findViewById(R.id.more_layout);
 
-        mRefreshLayout.setOnClickListener(new View.OnClickListener() {
+
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                Log.d(TAG, "mRefreshLayouton    Click: 点击");
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    scrollX = event.getX();
+                    scrollY = event.getY();
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (v.getId() != 0 && Math.abs(scrollX - event.getX()) <= 5 && Math.abs(scrollY - event.getY()) <= 5) {
+                        //recyclerView空白处点击事件
+                        Log.d(TAG, "recyclerView空白处点击事件");
+                    }
+                }
+                return false;
             }
         });
 
@@ -101,7 +118,8 @@ public class EditEmotion3Activity extends AppCompatActivity {
                     //输入法
                     lockContentViewHeight();
                     mPanelLayout.setVisibility(View.GONE);
-                    KeyBoardUtils.openKeybord2(mMyEditText);
+                    //弹出键盘
+                    showSoftKeyboard();
                     unlockContentViewHeight();
                 }
             }
@@ -122,7 +140,8 @@ public class EditEmotion3Activity extends AppCompatActivity {
                         //输入法
                         lockContentViewHeight();
                         mPanelLayout.setVisibility(View.GONE);
-                        KeyBoardUtils.openKeybord2(mMyEditText);
+                        //弹出键盘
+                        showSoftKeyboard();
                         unlockContentViewHeight();
                     }
 
@@ -228,37 +247,24 @@ public class EditEmotion3Activity extends AppCompatActivity {
             keyBoardHeightChange = keyBoardHeight;
             mPanelLayout.getLayoutParams().height = keyBoardHeight;
         } else {
-            handler.postDelayed(new Runnable() {
+            mPanelHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    KeyBoardUtils.openKeybord2(mMyEditText);
+                    //弹出键盘
+                    showSoftKeyboard();
                 }
             }, 200);
         }
 
-
-    }
-
-    public static int getRealHeight(Context context) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
-        DisplayMetrics dm = new DisplayMetrics();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            display.getRealMetrics(dm);
-        } else {
-            display.getMetrics(dm);
-        }
-        int realHeight = dm.heightPixels;
-        return realHeight;
+        mEmotionView.init(mMyEditText);
     }
 
 
     private int mPaneStatus = 0;  //0 面板隐藏  1 输入法  2 语音
     private final int PaneHide = 0; //面板隐藏
-    private final int PaneKeyBard = 1; //输入法
-    private final int PaneVoice = 2; //语音
-    private final int PaneEmotion = 3; //表情包
-    private final int PaneMore = 4; //更多
+    private final int PaneVoice = 1; //语音
+    private final int PaneEmotion = 2; //表情包
+    private final int PaneMore = 3; //更多
 
     private void PaneSelect(CheckBox mCheckBox) {
 
@@ -271,26 +277,32 @@ public class EditEmotion3Activity extends AppCompatActivity {
                 mRecorderButton.setVisibility(View.VISIBLE);
                 mMyEditText.setVisibility(View.GONE);
 
-                //lockContentViewHeight();
-               /* mPanelLayout.getLayoutParams().height = 0;
-                mPanelLayout.setVisibility(View.GONE);*/
-
-                //unlockContentViewHeight();
-                KeyBoardUtils.closeKeybord(mMyEditText);
+                if (mPanelLayout.getHeight() > 0) {
+                    mPanelLayout.getLayoutParams().height = 0;
+                    mPanelLayout.setVisibility(View.GONE);
+                    //隐藏键盘
+                    hideSoftKeyboard();
+                } else {
+                    lockContentViewHeight();
+                    mPanelLayout.getLayoutParams().height = 0;
+                    mPanelLayout.setVisibility(View.GONE);
+                    //隐藏键盘
+                    hideSoftKeyboard();
+                    unlockContentViewHeight();
+                }
 
             } else {
                 //输入法
                 mRecorderButton.setVisibility(View.GONE);
                 mMyEditText.setVisibility(View.VISIBLE);
 
-
-                KeyBoardUtils.openKeybord2(mMyEditText);
+                //弹出键盘
+                showSoftKeyboard();
             }
 
         }
 
         if (mPaneStatus == PaneEmotion || mPaneStatus == PaneMore) {
-
 
             if (mPanelLayout.getVisibility() == View.VISIBLE) {
                 lockContentViewHeight();
@@ -307,7 +319,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
             }
 
         }
-        
+
 
         mEmotionLayout.setVisibility(View.GONE);
         mMoreLayout.setVisibility(View.GONE);
@@ -315,9 +327,6 @@ public class EditEmotion3Activity extends AppCompatActivity {
         switch (mPaneStatus) {
             case PaneHide:
                 //面板隐藏
-
-                break;
-            case PaneKeyBard:
 
                 break;
             case PaneVoice:
@@ -352,13 +361,11 @@ public class EditEmotion3Activity extends AppCompatActivity {
     }
 
 
-    private static final String Panel_KEYBOARD = "PanelKeyboard";
-
     private static final String KEY_SOFT_KEYBOARD_HEIGHT = "SoftKeyboardHeight1";
 
     private static final int SOFT_KEYBOARD_HEIGHT_DEFAULT = 654;
 
-    private Handler handler = new Handler();
+    private Handler mPanelHandler = new Handler();
 
     /**
      * 显示更多面板
@@ -382,7 +389,8 @@ public class EditEmotion3Activity extends AppCompatActivity {
     public void hidePanel() {
 
         mPanelLayout.setVisibility(View.GONE);
-        KeyBoardUtils.openKeybord2(mMyEditText);
+        //弹出键盘
+        showSoftKeyboard();
 
     }
 
@@ -391,6 +399,13 @@ public class EditEmotion3Activity extends AppCompatActivity {
      */
     private void hideSoftKeyboard() {
         KeyBoardUtils.closeKeybord(mMyEditText);
+    }
+
+    /**
+     * 隐藏键盘
+     */
+    private void showSoftKeyboard() {
+        KeyBoardUtils.openKeybord2(mMyEditText);
     }
 
     /**
@@ -406,7 +421,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
      * 释放锁定的内容View
      */
     private void unlockContentViewHeight() {
-        handler.postDelayed(new Runnable() {
+        mPanelHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 ((LinearLayout.LayoutParams) mChatContainer.getLayoutParams()).weight = 1;
@@ -422,6 +437,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
         Log.d(TAG, "键盘高度: " + value);
         return value;
     }
+
 
 
 }
