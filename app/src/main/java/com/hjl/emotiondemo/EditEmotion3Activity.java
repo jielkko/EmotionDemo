@@ -112,6 +112,8 @@ public class EditEmotion3Activity extends AppCompatActivity {
                     Log.d(TAG, "键盘弹出时: ");
                     isShowKeyKeyBoard = true;
                     keyBoardHeight = heiDifference;
+                    // 因为考虑到用户可能会主动调整键盘高度，所以只能是每次获取到键盘高度时都将其存储起来
+                    PanelKeyBoardSPUtils.put(ContextUtil.getContext(),KEY_SOFT_KEYBOARD_HEIGHT,keyBoardHeight);
                 }
             }
         });
@@ -174,26 +176,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
 
     }
 
-    final private static int KeyboardHeightLimit = 200;
 
-    private void checkKeyboardHeight(final View chatRootLayout) {
-        chatRootLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect r = new Rect();
-
-                chatRootLayout.getWindowVisibleDisplayFrame(r);
-
-                final int screenHeight = chatRootLayout.getRootView().getHeight();
-                Log.d(TAG, "screenHeight: " + screenHeight);
-                final int keyboardHeight = screenHeight - (r.bottom);
-
-                if (keyboardHeight > KeyboardHeightLimit) {
-                    Log.d(TAG, "keyboardHeight: " + keyboardHeight);
-                }
-            }
-        });
-    }
 
 
     //private int PaneStatus = 0;  //0 面板隐藏  1 输入法  2 语音
