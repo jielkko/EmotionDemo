@@ -52,6 +52,7 @@ public class KeyBoardUtils {
         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
 
+
     }
 
     /**

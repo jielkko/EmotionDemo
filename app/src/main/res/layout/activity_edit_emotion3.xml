@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/parent">
 
 
     <LinearLayout
@@ -203,12 +204,17 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <com.hjl.emotionpicker.EmotionAllView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="表情包"
+                android:textColor="#333333" />
+          <!--  <com.hjl.emotionpicker.EmotionAllView
                 android:id="@+id/emotion_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            </com.hjl.emotionpicker.EmotionAllView>
+            </com.hjl.emotionpicker.EmotionAllView>-->
 
         </LinearLayout>
 

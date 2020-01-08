@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
@@ -30,6 +31,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
 
     protected final String TAG = this.getClass().getSimpleName();
 
+    private LinearLayout mParent;
     private LinearLayout mChatContainer;
     private TextView mIsNetwork;
     private SwipeRefreshLayout mRefreshLayout;
@@ -43,7 +45,6 @@ public class EditEmotion3Activity extends AppCompatActivity {
     private ButtonStyle mSendBtn;
     private LinearLayout mPanelLayout;
     private LinearLayout mEmotionLayout;
-    private EmotionAllView mEmotionView;
     private LinearLayout mMoreLayout;
 
 
@@ -56,7 +57,12 @@ public class EditEmotion3Activity extends AppCompatActivity {
         initView();
     }
 
+    private Boolean isShowKeyKeyBoard = false;
+    private int keyBoardHeightChange = 0;  //实时高度
+    private int keyBoardHeight = 0;   //默认弹出高度
+
     private void findById() {
+        mParent = (LinearLayout) findViewById(R.id.parent);
         mChatContainer = (LinearLayout) findViewById(R.id.chat_container);
         mIsNetwork = (TextView) findViewById(R.id.isNetwork);
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshLayout);
@@ -70,7 +76,6 @@ public class EditEmotion3Activity extends AppCompatActivity {
         mSendBtn = (ButtonStyle) findViewById(R.id.send_btn);
         mPanelLayout = (LinearLayout) findViewById(R.id.panel_layout);
         mEmotionLayout = (LinearLayout) findViewById(R.id.emotion_layout);
-        mEmotionView = (EmotionAllView) findViewById(R.id.emotion_view);
         mMoreLayout = (LinearLayout) findViewById(R.id.more_layout);
 
         mRefreshLayout.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +90,29 @@ public class EditEmotion3Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PaneSelect(PaneKeyBard, null);
+            }
+        });
+
+        mMyEditText.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect rect = new Rect();
+                getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);//获取当前界面可视部分
+                int screenHeight = getWindow().getDecorView().getRootView().getHeight();//获取屏幕高度
+                int heiDifference = screenHeight - rect.bottom;//获取键盘高度，键盘没有弹出时，高度为0，键盘弹出时，高度为正数
+                Log.d("Keyboard Size", "Size: " + heiDifference);
+                keyBoardHeightChange = heiDifference;
+
+                if (heiDifference == 0) {
+                    //todo:键盘没有弹出时
+                    Log.d(TAG, "键盘没有弹出时: ");
+                    isShowKeyKeyBoard = false;
+                } else {
+                    //todo：键盘弹出时
+                    Log.d(TAG, "键盘弹出时: ");
+                    isShowKeyKeyBoard = true;
+                    keyBoardHeight = heiDifference;
+                }
             }
         });
 
@@ -118,17 +146,53 @@ public class EditEmotion3Activity extends AppCompatActivity {
      * 则在进入Activity时自动打开键盘，并把高度值保存下来
      */
     private void initView() {
-        if (!PanelKeyBoardSPUtils.contains(this, KEY_SOFT_KEYBOARD_HEIGHT)) {
+
+        initPanelView();
+
+
+    }
+
+    /**
+     * 初始化显示面板高度
+     */
+    public void initPanelView() {
+
+        if (PanelKeyBoardSPUtils.contains(this, KEY_SOFT_KEYBOARD_HEIGHT)) {
+
+            //高度数据存在
+            keyBoardHeight = getSoftKeyboardHeightLocalValue();
+            mPanelLayout.getLayoutParams().height = keyBoardHeight;
+        } else {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    showSoftKeyboard(true);
+                    showSoftKeyboard();
                 }
             }, 200);
         }
-        getSoftKeyboardHeightLocalValue();
 
-        mEmotionView.init(mMyEditText);
+
+    }
+
+    final private static int KeyboardHeightLimit = 200;
+
+    private void checkKeyboardHeight(final View chatRootLayout) {
+        chatRootLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+
+                chatRootLayout.getWindowVisibleDisplayFrame(r);
+
+                final int screenHeight = chatRootLayout.getRootView().getHeight();
+                Log.d(TAG, "screenHeight: " + screenHeight);
+                final int keyboardHeight = screenHeight - (r.bottom);
+
+                if (keyboardHeight > KeyboardHeightLimit) {
+                    Log.d(TAG, "keyboardHeight: " + keyboardHeight);
+                }
+            }
+        });
     }
 
 
@@ -146,27 +210,23 @@ public class EditEmotion3Activity extends AppCompatActivity {
             if (mCheckBox.isChecked()) {
                 mRecorderButton.setVisibility(View.VISIBLE);
                 mMyEditText.setVisibility(View.GONE);
-                hideSoftKeyboard();
-               /* lockContentViewHeight();
-                hidePanel(false);
-                unlockContentViewHeight();*/
+
             } else {
                 mRecorderButton.setVisibility(View.GONE);
                 mMyEditText.setVisibility(View.VISIBLE);
-                showSoftKeyboard(false);
-                /*lockContentViewHeight();
-                hidePanel(true);
-                unlockContentViewHeight();*/
+
+
             }
         }
         if (status == PaneEmotion) {
+            Log.d(TAG, "isShowKeyKeyBoard=: " + isShowKeyKeyBoard);
 
             if (mPanelLayout.getVisibility() == View.VISIBLE) {
                 lockContentViewHeight();
-                hidePanel(true);
+                hidePanel();
                 unlockContentViewHeight();
             } else {
-                if (isSoftKeyboardShown()) {
+                if (isShowKeyKeyBoard) {
                     lockContentViewHeight();
                     showPanel();
                     unlockContentViewHeight();
@@ -181,10 +241,10 @@ public class EditEmotion3Activity extends AppCompatActivity {
 
             if (mPanelLayout.getVisibility() == View.VISIBLE) {
                 lockContentViewHeight();
-                hidePanel(true);
+                hidePanel();
                 unlockContentViewHeight();
             } else {
-                if (isSoftKeyboardShown()) {
+                if (isShowKeyKeyBoard) {
                     lockContentViewHeight();
                     showPanel();
                     unlockContentViewHeight();
@@ -206,7 +266,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
             case PaneKeyBard:
                 //输入法
                 lockContentViewHeight();
-                hidePanel(true);
+                hidePanel();
                 unlockContentViewHeight();
                 break;
             case PaneVoice:
@@ -237,7 +297,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
 
     private static final String Panel_KEYBOARD = "PanelKeyboard";
 
-    private static final String KEY_SOFT_KEYBOARD_HEIGHT = "SoftKeyboardHeight";
+    private static final String KEY_SOFT_KEYBOARD_HEIGHT = "SoftKeyboardHeight1";
 
     private static final int SOFT_KEYBOARD_HEIGHT_DEFAULT = 654;
 
@@ -248,7 +308,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
      */
     public void showPanel() {
 
-        int softKeyboardHeight = getSoftKeyboardHeight();
+        int softKeyboardHeight = keyBoardHeightChange;
         if (softKeyboardHeight == 0) {
             softKeyboardHeight = getSoftKeyboardHeightLocalValue();
         } else {
@@ -259,23 +319,21 @@ public class EditEmotion3Activity extends AppCompatActivity {
         mPanelLayout.setVisibility(View.VISIBLE);
     }
 
+
     /**
      * 隐藏更多面板，同时指定是否随后开启键盘
      */
-    public void hidePanel(boolean showSoftKeyboard) {
+    public void hidePanel() {
 
         mPanelLayout.setVisibility(View.GONE);
-        if (showSoftKeyboard) {
-            showSoftKeyboard(false);
-
-        }
+        showSoftKeyboard();
 
     }
 
     /**
      * 令编辑框获取焦点并显示键盘
      */
-    private void showSoftKeyboard(boolean saveSoftKeyboardHeight) {
+    private void showSoftKeyboard() {
         mMyEditText.setVisibility(View.VISIBLE);
         //获取焦点
         mMyEditText.setFocusable(true);
@@ -283,14 +341,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
         mMyEditText.requestFocus();//获取焦点 光标出现
 
         KeyBoardUtils.openKeybord(mMyEditText);
-        if (saveSoftKeyboardHeight) {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getSoftKeyboardHeight();
-                }
-            }, 200);
-        }
+
     }
 
     /**
@@ -321,32 +372,6 @@ public class EditEmotion3Activity extends AppCompatActivity {
         }, 200);
     }
 
-    /**
-     * 获取键盘的高度
-     */
-    private int getSoftKeyboardHeight() {
-
-
-        Rect rect = new Rect();
-        getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
-        //屏幕当前可见高度，不包括状态栏
-        int displayHeight = rect.bottom - rect.top;
-        //屏幕可用高度
-        int availableHeight = ScreenUtils.getAvailableScreenHeight(this);
-        //用于计算键盘高度
-        int softInputHeight = availableHeight - displayHeight - ScreenUtils.getStatusBarHeight(this);
-        Log.e("TAG-di", displayHeight + "");
-        Log.e("TAG-av", availableHeight + "");
-        Log.e("TAG-so", softInputHeight + "");
-        if (softInputHeight > 0) {
-            // 因为考虑到用户可能会主动调整键盘高度，所以只能是每次获取到键盘高度时都将其存储起来
-            if (!PanelKeyBoardSPUtils.contains(this, KEY_SOFT_KEYBOARD_HEIGHT)) {
-                PanelKeyBoardSPUtils.put(this, KEY_SOFT_KEYBOARD_HEIGHT, softInputHeight);
-            }
-        }
-
-        return softInputHeight;
-    }
 
     /**
      * 获取本地存储的键盘高度值或者是返回默认值
@@ -356,13 +381,6 @@ public class EditEmotion3Activity extends AppCompatActivity {
         int value = (int) PanelKeyBoardSPUtils.get(this, KEY_SOFT_KEYBOARD_HEIGHT, SOFT_KEYBOARD_HEIGHT_DEFAULT);
         Log.d(TAG, "键盘高度: " + value);
         return value;
-    }
-
-    /**
-     * 判断是否显示了键盘
-     */
-    private boolean isSoftKeyboardShown() {
-        return getSoftKeyboardHeight() != 0;
     }
 
 
