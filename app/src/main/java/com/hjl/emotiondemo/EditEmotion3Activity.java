@@ -2,6 +2,7 @@ package com.hjl.emotiondemo;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import com.hjl.emotiondemo.common.ContextUtil;
 import com.hjl.emotiondemo.utils.EmojiKeyboard;
 import com.hjl.emotiondemo.utils.KeyBoardUtils;
+import com.hjl.emotiondemo.utils.NavigationBarUtils;
 import com.hjl.emotiondemo.utils.PanelKeyBoardSPUtils;
 import com.hjl.emotiondemo.utils.ScreenUtils;
 import com.hjl.emotionpicker.EmotionAllView;
@@ -89,8 +92,49 @@ public class EditEmotion3Activity extends AppCompatActivity {
         mMyEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PaneSelect(PaneKeyBard, null);
+                // 获得焦点
+                if (mPaneStatus == PaneEmotion || mPaneStatus == PaneMore) {
+                    mVoiceButton.setChecked(false);
+                    mEmotionButton.setChecked(false);
+                    mMoreButton.setChecked(false);
+
+                    //输入法
+                    lockContentViewHeight();
+                    mPanelLayout.setVisibility(View.GONE);
+                    KeyBoardUtils.openKeybord2(mMyEditText);
+                    unlockContentViewHeight();
+                }
             }
+        });
+        mMyEditText.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if (hasFocus) {
+
+                    // 获得焦点
+                    if (mPaneStatus == PaneEmotion || mPaneStatus == PaneMore) {
+                        mVoiceButton.setChecked(false);
+                        mEmotionButton.setChecked(false);
+                        mMoreButton.setChecked(false);
+
+                        //输入法
+                        lockContentViewHeight();
+                        mPanelLayout.setVisibility(View.GONE);
+                        KeyBoardUtils.openKeybord2(mMyEditText);
+                        unlockContentViewHeight();
+                    }
+
+                } else {
+
+                    // 失去焦点
+
+                }
+
+            }
+
+
         });
 
         mMyEditText.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -102,8 +146,20 @@ public class EditEmotion3Activity extends AppCompatActivity {
                 int heiDifference = screenHeight - rect.bottom;//获取键盘高度，键盘没有弹出时，高度为0，键盘弹出时，高度为正数
                 Log.d("Keyboard Size", "Size: " + heiDifference);
 
+                int virtualBarHeight = NavigationBarUtils.getNavigationBarHeightIfRoom(EditEmotion3Activity.this);
+                Log.d(TAG, "虚拟导航栏: " + virtualBarHeight);
 
-                if (heiDifference > 100) {
+                if (heiDifference == 0) {
+
+                } else {
+                    if (virtualBarHeight > 0) {
+                        heiDifference = heiDifference - virtualBarHeight;
+                    }
+                }
+
+                Log.d(TAG, "实际输入法高度: " + heiDifference);
+                keyBoardHeightChange = heiDifference;
+                if (heiDifference > 0) {
                     //todo：键盘弹出时
                     Log.d(TAG, "键盘弹出时: ");
                     isShowKeyKeyBoard = true;
@@ -112,12 +168,11 @@ public class EditEmotion3Activity extends AppCompatActivity {
                     if (keyBoardHeight > 100) {
                         PanelKeyBoardSPUtils.put(ContextUtil.getContext(), KEY_SOFT_KEYBOARD_HEIGHT, keyBoardHeight);
                     }
-                    keyBoardHeightChange = heiDifference;
                 } else {
                     //todo:键盘没有弹出时
                     Log.d(TAG, "键盘没有弹出时: ");
                     isShowKeyKeyBoard = false;
-                    keyBoardHeightChange = 0;
+
                 }
             }
         });
@@ -126,21 +181,24 @@ public class EditEmotion3Activity extends AppCompatActivity {
         mVoiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PaneSelect(PaneVoice, mVoiceButton);
+                mPaneStatus = PaneVoice;
+                PaneSelect(mVoiceButton);
             }
         });
 
         mEmotionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PaneSelect(PaneEmotion, mEmotionButton);
+                mPaneStatus = PaneEmotion;
+                PaneSelect(mEmotionButton);
             }
         });
 
         mMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PaneSelect(PaneMore, mMoreButton);
+                mPaneStatus = PaneMore;
+                PaneSelect(mMoreButton);
             }
         });
 
@@ -167,6 +225,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
 
             //高度数据存在
             keyBoardHeight = getSoftKeyboardHeightLocalValue();
+            keyBoardHeightChange = keyBoardHeight;
             mPanelLayout.getLayoutParams().height = keyBoardHeight;
         } else {
             handler.postDelayed(new Runnable() {
@@ -180,36 +239,58 @@ public class EditEmotion3Activity extends AppCompatActivity {
 
     }
 
+    public static int getRealHeight(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        DisplayMetrics dm = new DisplayMetrics();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealMetrics(dm);
+        } else {
+            display.getMetrics(dm);
+        }
+        int realHeight = dm.heightPixels;
+        return realHeight;
+    }
 
-    //private int PaneStatus = 0;  //0 面板隐藏  1 输入法  2 语音
+
+    private int mPaneStatus = 0;  //0 面板隐藏  1 输入法  2 语音
     private final int PaneHide = 0; //面板隐藏
     private final int PaneKeyBard = 1; //输入法
     private final int PaneVoice = 2; //语音
     private final int PaneEmotion = 3; //表情包
     private final int PaneMore = 4; //更多
 
-    private void PaneSelect(int status, CheckBox mCheckBox) {
+    private void PaneSelect(CheckBox mCheckBox) {
 
 
-        if (status == PaneVoice) {
+        if (mPaneStatus == PaneVoice) {
+
             if (mCheckBox.isChecked()) {
+                //语音
+
                 mRecorderButton.setVisibility(View.VISIBLE);
                 mMyEditText.setVisibility(View.GONE);
 
-                mPanelLayout.getLayoutParams().height = 0;
-                mPanelLayout.setVisibility(View.GONE);
+                //lockContentViewHeight();
+               /* mPanelLayout.getLayoutParams().height = 0;
+                mPanelLayout.setVisibility(View.GONE);*/
+
+                //unlockContentViewHeight();
                 KeyBoardUtils.closeKeybord(mMyEditText);
+
             } else {
+                //输入法
                 mRecorderButton.setVisibility(View.GONE);
                 mMyEditText.setVisibility(View.VISIBLE);
+
 
                 KeyBoardUtils.openKeybord2(mMyEditText);
             }
 
         }
 
-        if (status == PaneEmotion) {
-            Log.d(TAG, "isShowKeyKeyBoard=: " + isShowKeyKeyBoard);
+        if (mPaneStatus == PaneEmotion || mPaneStatus == PaneMore) {
+
 
             if (mPanelLayout.getVisibility() == View.VISIBLE) {
                 lockContentViewHeight();
@@ -226,40 +307,18 @@ public class EditEmotion3Activity extends AppCompatActivity {
             }
 
         }
-
-        if (status == PaneMore) {
-
-            if (mPanelLayout.getVisibility() == View.VISIBLE) {
-                lockContentViewHeight();
-                hidePanel();
-                unlockContentViewHeight();
-            } else {
-                if (isShowKeyKeyBoard) {
-                    lockContentViewHeight();
-                    showPanel();
-                    unlockContentViewHeight();
-                } else {
-                    showPanel();
-                }
-            }
-
-        }
+        
 
         mEmotionLayout.setVisibility(View.GONE);
         mMoreLayout.setVisibility(View.GONE);
 
-        switch (status) {
+        switch (mPaneStatus) {
             case PaneHide:
                 //面板隐藏
 
                 break;
             case PaneKeyBard:
-                //输入法
-                if (!isShowKeyKeyBoard) {
-                    mPanelLayout.getLayoutParams().height = 0;
-                    mPanelLayout.setVisibility(View.GONE);
-                    KeyBoardUtils.openKeybord2(mMyEditText);
-                }
+
                 break;
             case PaneVoice:
                 //语音
