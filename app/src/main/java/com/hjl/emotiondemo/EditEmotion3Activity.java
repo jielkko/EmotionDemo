@@ -8,26 +8,19 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hjl.emotiondemo.common.ContextUtil;
-import com.hjl.emotiondemo.utils.EmojiKeyboard;
 import com.hjl.emotiondemo.utils.KeyBoardUtils;
 import com.hjl.emotiondemo.utils.NavigationBarUtils;
 import com.hjl.emotiondemo.utils.PanelKeyBoardSPUtils;
-import com.hjl.emotiondemo.utils.ScreenUtils;
 import com.hjl.emotionpicker.EmotionAllView;
 import com.lai.library.ButtonStyle;
 
@@ -40,6 +33,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
     private TextView mIsNetwork;
     private SwipeRefreshLayout mRefreshLayout;
     private RecyclerView mRecyclerView;
+    private LinearLayout mZhezhaoceng;
     private CheckBox mVoiceButton;
     private LinearLayout mRlEditbarBg;
     private EditText mMyEditText;
@@ -51,6 +45,9 @@ public class EditEmotion3Activity extends AppCompatActivity {
     private LinearLayout mEmotionLayout;
     private EmotionAllView mEmotionView;
     private LinearLayout mMoreLayout;
+
+
+
 
 
     @Override
@@ -75,6 +72,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
         mIsNetwork = (TextView) findViewById(R.id.isNetwork);
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshLayout);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mZhezhaoceng = (LinearLayout) findViewById(R.id.zhezhaoceng);
         mVoiceButton = (CheckBox) findViewById(R.id.voice_button);
         mRlEditbarBg = (LinearLayout) findViewById(R.id.rl_editbar_bg);
         mMyEditText = (EditText) findViewById(R.id.my_editText);
@@ -116,11 +114,18 @@ public class EditEmotion3Activity extends AppCompatActivity {
                     mMoreButton.setChecked(false);
 
                     //输入法
-                    lockContentViewHeight();
                     mPanelLayout.setVisibility(View.GONE);
                     //弹出键盘
                     showSoftKeyboard();
-                    unlockContentViewHeight();
+
+                    mZhezhaoceng.setVisibility(View.VISIBLE);
+                }
+
+                if (mPaneStatus == PaneHide) {
+                    mZhezhaoceng.setVisibility(View.VISIBLE);
+                }
+                if (mPaneStatus == PaneVoice) {
+                    mZhezhaoceng.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -137,14 +142,26 @@ public class EditEmotion3Activity extends AppCompatActivity {
                         mEmotionButton.setChecked(false);
                         mMoreButton.setChecked(false);
 
-                        //输入法
-                        lockContentViewHeight();
-                        mPanelLayout.setVisibility(View.GONE);
-                        //弹出键盘
-                        showSoftKeyboard();
-                        unlockContentViewHeight();
-                    }
 
+                        if (isShowKeyKeyBoard) {
+                            lockContentViewHeight();
+                            mPanelLayout.setVisibility(View.GONE);
+                            //弹出键盘
+                            showSoftKeyboard();
+                            unlockContentViewHeight();
+                        } else {
+                            mPanelLayout.setVisibility(View.GONE);
+                            //弹出键盘
+                            showSoftKeyboard();
+                        }
+                        mZhezhaoceng.setVisibility(View.VISIBLE);
+                    }
+                    if (mPaneStatus == PaneHide) {
+                        mZhezhaoceng.setVisibility(View.VISIBLE);
+                    }
+                    if (mPaneStatus == PaneVoice) {
+                        mZhezhaoceng.setVisibility(View.VISIBLE);
+                    }
                 } else {
 
                     // 失去焦点
@@ -187,15 +204,27 @@ public class EditEmotion3Activity extends AppCompatActivity {
                     if (keyBoardHeight > 100) {
                         PanelKeyBoardSPUtils.put(ContextUtil.getContext(), KEY_SOFT_KEYBOARD_HEIGHT, keyBoardHeight);
                     }
+                    mZhezhaoceng.setVisibility(View.VISIBLE);
                 } else {
                     //todo:键盘没有弹出时
                     Log.d(TAG, "键盘没有弹出时: ");
                     isShowKeyKeyBoard = false;
+                    mZhezhaoceng.setVisibility(View.GONE);
 
                 }
             }
         });
+        mZhezhaoceng.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "虚拟卡: ");
 
+                mPanelLayout.setVisibility(View.GONE);
+                KeyBoardUtils.closeKeybord(mMyEditText);
+                mZhezhaoceng.setVisibility(View.GONE);
+
+            }
+        });
 
         mVoiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -298,12 +327,32 @@ public class EditEmotion3Activity extends AppCompatActivity {
 
                 //弹出键盘
                 showSoftKeyboard();
+                mZhezhaoceng.setVisibility(View.VISIBLE);
             }
 
         }
 
         if (mPaneStatus == PaneEmotion || mPaneStatus == PaneMore) {
+            if (mCheckBox.isChecked()) {
+                if (isShowKeyKeyBoard) {
+                    lockContentViewHeight();
+                    showPanel();
+                    unlockContentViewHeight();
+                } else {
+                    showPanel();
+                }
+                mZhezhaoceng.setVisibility(View.VISIBLE);
+            }else{
+                if (isShowKeyKeyBoard) {
+                    lockContentViewHeight();
+                    hidePanel();
+                    unlockContentViewHeight();
+                } else {
+                    hidePanel();
+                }
 
+            }
+/*
             if (mPanelLayout.getVisibility() == View.VISIBLE) {
                 lockContentViewHeight();
                 hidePanel();
@@ -316,7 +365,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
                 } else {
                     showPanel();
                 }
-            }
+            }*/
 
         }
 
@@ -381,6 +430,9 @@ public class EditEmotion3Activity extends AppCompatActivity {
         Log.e("TAG-softKeyboardHeight", softKeyboardHeight + "");
         mPanelLayout.getLayoutParams().height = softKeyboardHeight;
         mPanelLayout.setVisibility(View.VISIBLE);
+
+
+
     }
 
     /**
@@ -389,6 +441,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
     public void hidePanel() {
 
         mPanelLayout.setVisibility(View.GONE);
+
         //弹出键盘
         showSoftKeyboard();
 
@@ -399,6 +452,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
      */
     private void hideSoftKeyboard() {
         KeyBoardUtils.closeKeybord(mMyEditText);
+        mZhezhaoceng.setVisibility(View.GONE);
     }
 
     /**
@@ -406,6 +460,7 @@ public class EditEmotion3Activity extends AppCompatActivity {
      */
     private void showSoftKeyboard() {
         KeyBoardUtils.openKeybord2(mMyEditText);
+        mZhezhaoceng.setVisibility(View.VISIBLE);
     }
 
     /**

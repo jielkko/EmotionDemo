@@ -23,9 +23,12 @@ public class EditEmotion2Activity extends AppCompatActivity {
 
     private static final String TAG = "EditEmotion2Activity";
 
+    private LinearLayout mParent;
     private LinearLayout mChatContainer;
+    private TextView mIsNetwork;
     private SwipeRefreshLayout mRefreshLayout;
     private RecyclerView mRecyclerView;
+    private LinearLayout mZhezhaoceng;
     private CheckBox mVoiceButton;
     private LinearLayout mRlEditbarBg;
     private EditText mMyEditText;
@@ -34,9 +37,12 @@ public class EditEmotion2Activity extends AppCompatActivity {
     private CheckBox mMoreButton;
     private ButtonStyle mSendBtn;
     private LinearLayout mPanelLayout;
-    private LinearLayout mMoreLayout;
     private LinearLayout mEmotionLayout;
     private EmotionAllView mEmotionView;
+    private LinearLayout mMoreLayout;
+
+
+
 
 
 
